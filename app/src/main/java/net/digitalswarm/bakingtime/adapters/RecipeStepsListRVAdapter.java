@@ -26,7 +26,7 @@ public class RecipeStepsListRVAdapter extends RecyclerView.Adapter<RecipeStepsLi
 
         RecipeStepsListViewHolder(View view) {
             super(view);
-            recipeStepsTextView = view.findViewById(R.id.recipe_list_tv); //assign view
+            recipeStepsTextView = view.findViewById(R.id.recipe_steps_tv); //assign view
             view.setOnClickListener(this);
         }
 
