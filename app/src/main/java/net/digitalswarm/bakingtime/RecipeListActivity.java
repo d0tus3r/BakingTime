@@ -35,7 +35,7 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeListR
         RecipeService service = RetrofitInstance.getRetrofitInstance().create(RecipeService.class);
         //Call service method to get data
         Call<ArrayList<Recipe>> call = service.getRecipes();
-
+        //queue call request
         call.enqueue(new Callback<ArrayList<Recipe>>() {
             @Override
             public void onResponse(Call<ArrayList<Recipe>> call, Response<ArrayList<Recipe>> response) {

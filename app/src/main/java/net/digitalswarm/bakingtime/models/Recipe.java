@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 /**
  * Recipe object holds all data associated to the recipe. Arrays for ingredients and steps
+ * pojo for gson parsing
  */
 
 public class Recipe implements Parcelable {
