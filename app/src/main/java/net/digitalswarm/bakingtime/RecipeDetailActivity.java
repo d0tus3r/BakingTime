@@ -10,13 +10,13 @@ import net.digitalswarm.bakingtime.models.Recipe;
 public class RecipeDetailActivity extends AppCompatActivity {
 
     Recipe currentRecipe;
-    //Todo: change title bar to recipe
+    //Todo: change title bar to recipe name
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recipe_detail_activity);
         //assign recipe from intent
-        this.currentRecipe = getIntent().getParcelableExtra("recipe");
+        this.currentRecipe = getIntent().getParcelableExtra("Recipe");
         //start ingredients and step list fragments
         //attach within frame layout on detail_frame
         FragmentManager fragmentManager = getSupportFragmentManager();

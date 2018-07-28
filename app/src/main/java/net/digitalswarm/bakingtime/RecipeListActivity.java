@@ -44,7 +44,7 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeListR
             }
             @Override
             public void onFailure(Call<ArrayList<Recipe>> call, Throwable t) {
-                //toast or log
+                //todo: toast or log
             }
         });
 
