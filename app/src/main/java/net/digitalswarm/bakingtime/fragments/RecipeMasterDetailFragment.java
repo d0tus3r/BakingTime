@@ -34,7 +34,11 @@ public class RecipeMasterDetailFragment extends Fragment {
     private RecipeStepsListRVAdapter recipeStepsRVAdapter;
     LinearLayoutManager ingredientsLayout;
     LinearLayoutManager recipeStepsLayout;
-    //RecipeStepsListRVAdapter.RecipeStepsListRVAdapterClickListener recipeRVListener;
+    OnStepsClickListener mCallback;
+
+    public interface OnStepsClickListener {
+        void onStepSelected(int position);
+    }
 
 
     public RecipeMasterDetailFragment() {
@@ -79,12 +83,23 @@ public class RecipeMasterDetailFragment extends Fragment {
         recipeStepsRVAdapter = new RecipeStepsListRVAdapter(context, mRecipeStepsList, new RecipeStepsListRVAdapter.RecipeStepsListRVAdapterClickListener() {
             @Override
             public void onClick(int pos) {
-                Toast.makeText(getActivity(), "Clicked at pos: " + pos, Toast.LENGTH_SHORT).show();
+                mCallback.onStepSelected(pos);
             }
         });
         recipeStepsRV.setAdapter(recipeStepsRVAdapter);
 
         return rootView;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try {
+            mCallback = (OnStepsClickListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement OnStepsClickListener");
+        }
     }
 }
 
