@@ -12,7 +12,7 @@ import net.digitalswarm.bakingtime.models.RecipeSteps;
 import android.view.View.OnClickListener;
 import java.util.ArrayList;
 
-public class RecipeStepsListRVAdapter extends RecyclerView.Adapter<RecipeStepsListRVAdapter.RecipeStepsListViewHolder> {
+public class RecipeStepsListRVAdapter extends RecyclerView.Adapter<RecipeStepsListRVAdapter.RecipeStepsListViewHolder>  {
     private ArrayList<RecipeSteps> mRecipeStepsList;
     private final Context mContext;
     private final RecipeStepsListRVAdapterClickListener mClickListener;
@@ -21,7 +21,7 @@ public class RecipeStepsListRVAdapter extends RecyclerView.Adapter<RecipeStepsLi
         void onClick(int pos);
     }
 
-    public class RecipeStepsListViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
+    public class RecipeStepsListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         final TextView recipeStepsTextView;
 
         RecipeStepsListViewHolder(View view) {
@@ -31,11 +31,11 @@ public class RecipeStepsListRVAdapter extends RecyclerView.Adapter<RecipeStepsLi
         }
 
         @Override
-        public void onClick(View view){
-            int adapterPos = getAdapterPosition();
-            mClickListener.onClick(adapterPos);
+        public void onClick(View view) {
+            mClickListener.onClick(getAdapterPosition());
         }
     }
+
     //adapter constructor
     public RecipeStepsListRVAdapter(Context context, ArrayList<RecipeSteps> recipeStepsList, RecipeStepsListRVAdapterClickListener clickListener){
         this.mContext = context;
@@ -53,7 +53,7 @@ public class RecipeStepsListRVAdapter extends RecyclerView.Adapter<RecipeStepsLi
     @Override
     public void onBindViewHolder(final RecipeStepsListViewHolder recipeHolder, int position){
         RecipeSteps currentRecipeStep = mRecipeStepsList.get(position);
-        recipeHolder.recipeStepsTextView.setText(currentRecipeStep.getDescription());
+        recipeHolder.recipeStepsTextView.setText(currentRecipeStep.getShortDescription());
     }
 
     @Override

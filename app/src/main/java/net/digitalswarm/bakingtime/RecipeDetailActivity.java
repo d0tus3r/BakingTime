@@ -3,13 +3,16 @@ package net.digitalswarm.bakingtime;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import net.digitalswarm.bakingtime.fragments.RecipeMasterDetailFragment;
 import net.digitalswarm.bakingtime.models.Recipe;
+import net.digitalswarm.bakingtime.models.RecipeSteps;
 
 public class RecipeDetailActivity extends AppCompatActivity {
 
     Recipe currentRecipe;
+    RecipeSteps currentRecipeStep;
     //Todo: change title bar to recipe name
     @Override
     protected void onCreate(Bundle savedInstanceState) {

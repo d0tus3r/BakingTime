@@ -8,21 +8,25 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="@dimen/basePadding"
         android:text="Ingredients:"/>
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="@dimen/basePadding"
         android:id="@+id/ingredients_rv"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="@dimen/basePadding"
         android:text="Steps:"/>
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="@dimen/basePadding"
         android:id="@+id/recipe_steps_rv"/>
 
 

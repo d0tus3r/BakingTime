@@ -8,6 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Toast;
 
 import net.digitalswarm.bakingtime.R;
 import net.digitalswarm.bakingtime.adapters.IngredientsRVAdapter;
@@ -19,7 +21,7 @@ import net.digitalswarm.bakingtime.models.RecipeSteps;
 
 import java.util.ArrayList;
 
-public class RecipeMasterDetailFragment extends Fragment {
+public class RecipeMasterDetailFragment extends Fragment implements RecipeStepsListRVAdapter.RecipeStepsListRVAdapterClickListener {
     private ArrayList<Ingredients> mIngredientsList;
     public static final String INGREDIENTS_KEY = "INGREDIENTS";
     private ArrayList<RecipeSteps> mRecipeStepsList;
@@ -33,8 +35,6 @@ public class RecipeMasterDetailFragment extends Fragment {
     LinearLayoutManager ingredientsLayout;
     LinearLayoutManager recipeStepsLayout;
     RecipeStepsListRVAdapter.RecipeStepsListRVAdapterClickListener recipeRVListener;
-
-
 
 
     public RecipeMasterDetailFragment() {
@@ -80,6 +80,12 @@ public class RecipeMasterDetailFragment extends Fragment {
         recipeStepsRV.setAdapter(recipeStepsRVAdapter);
 
         return rootView;
+    }
+
+
+    @Override
+    public void onClick(int pos) {
+        Toast.makeText(getContext(), "position: " + pos, Toast.LENGTH_SHORT).show();
     }
 }
 
