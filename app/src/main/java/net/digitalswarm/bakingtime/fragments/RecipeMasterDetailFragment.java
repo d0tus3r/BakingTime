@@ -21,7 +21,7 @@ import net.digitalswarm.bakingtime.models.RecipeSteps;
 
 import java.util.ArrayList;
 
-public class RecipeMasterDetailFragment extends Fragment implements RecipeStepsListRVAdapter.RecipeStepsListRVAdapterClickListener {
+public class RecipeMasterDetailFragment extends Fragment {
     private ArrayList<Ingredients> mIngredientsList;
     public static final String INGREDIENTS_KEY = "INGREDIENTS";
     private ArrayList<RecipeSteps> mRecipeStepsList;
@@ -34,7 +34,7 @@ public class RecipeMasterDetailFragment extends Fragment implements RecipeStepsL
     private RecipeStepsListRVAdapter recipeStepsRVAdapter;
     LinearLayoutManager ingredientsLayout;
     LinearLayoutManager recipeStepsLayout;
-    RecipeStepsListRVAdapter.RecipeStepsListRVAdapterClickListener recipeRVListener;
+    //RecipeStepsListRVAdapter.RecipeStepsListRVAdapterClickListener recipeRVListener;
 
 
     public RecipeMasterDetailFragment() {
@@ -76,16 +76,15 @@ public class RecipeMasterDetailFragment extends Fragment implements RecipeStepsL
         recipeStepsLayout = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recipeStepsRV.setHasFixedSize(true);
         recipeStepsRV.setLayoutManager(recipeStepsLayout);
-        recipeStepsRVAdapter = new RecipeStepsListRVAdapter(context, mRecipeStepsList, recipeRVListener);
+        recipeStepsRVAdapter = new RecipeStepsListRVAdapter(context, mRecipeStepsList, new RecipeStepsListRVAdapter.RecipeStepsListRVAdapterClickListener() {
+            @Override
+            public void onClick(int pos) {
+                Toast.makeText(getActivity(), "Clicked at pos: " + pos, Toast.LENGTH_SHORT).show();
+            }
+        });
         recipeStepsRV.setAdapter(recipeStepsRVAdapter);
 
         return rootView;
-    }
-
-
-    @Override
-    public void onClick(int pos) {
-        Toast.makeText(getContext(), "position: " + pos, Toast.LENGTH_SHORT).show();
     }
 }
 
