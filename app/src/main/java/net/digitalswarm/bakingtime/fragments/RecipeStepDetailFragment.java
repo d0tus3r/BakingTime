@@ -89,6 +89,8 @@ public class RecipeStepDetailFragment extends Fragment {
                 mNextCallback.onNextStepSelected(currentStepId);
             }
         });
+        //exoplayer
+        mPlayerView = rootView.findViewById(R.id.recipe_step_exo_view);
 
 
 
