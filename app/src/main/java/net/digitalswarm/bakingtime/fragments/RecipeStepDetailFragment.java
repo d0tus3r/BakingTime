@@ -1,5 +1,6 @@
 package net.digitalswarm.bakingtime.fragments;
 
+import android.content.Context;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -32,6 +34,16 @@ public class RecipeStepDetailFragment extends Fragment {
     private SimpleExoPlayerView mPlayerView;
     private static MediaSessionCompat mMediaSession;
     private PlaybackStateCompat.Builder mStateBuilder;
+    OnPrevStepsClickListener mPrevCallback;
+    OnNextStepsClickListener mNextCallback;
+
+    public interface OnPrevStepsClickListener {
+        void onPrevStepSelected(int position);
+    }
+
+    public interface OnNextStepsClickListener {
+        void onNextStepSelected(int position);
+    }
 
     public RecipeStepDetailFragment() {
         //empty constructor
@@ -63,6 +75,20 @@ public class RecipeStepDetailFragment extends Fragment {
         //assign text view and set text
         TextView stepDescriptionTV = rootView.findViewById(R.id.recipe_step_description_tv);
         stepDescriptionTV.setText(currentStep.getDescription());
+        Button prevButton = rootView.findViewById(R.id.previous_step_btn);
+        Button nextButton = rootView.findViewById(R.id.next_step_btn);
+        prevButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPrevCallback.onPrevStepSelected(currentStepId);
+            }
+        });
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mNextCallback.onNextStepSelected(currentStepId);
+            }
+        });
 
 
 
@@ -108,6 +134,18 @@ public class RecipeStepDetailFragment extends Fragment {
         @Override
         public void onSkipToPrevious() {
             mExoPlayer.seekTo(0);
+        }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try {
+            mPrevCallback = (RecipeStepDetailFragment.OnPrevStepsClickListener) context;
+            mNextCallback = (RecipeStepDetailFragment.OnNextStepsClickListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement OnStepsClickListener");
         }
     }
 

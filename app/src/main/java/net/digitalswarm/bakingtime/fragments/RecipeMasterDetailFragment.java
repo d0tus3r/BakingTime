@@ -8,17 +8,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Toast;
-
 import net.digitalswarm.bakingtime.R;
 import net.digitalswarm.bakingtime.adapters.IngredientsRVAdapter;
-import net.digitalswarm.bakingtime.adapters.RecipeListRVAdapter;
 import net.digitalswarm.bakingtime.adapters.RecipeStepsListRVAdapter;
 import net.digitalswarm.bakingtime.models.Ingredients;
-import net.digitalswarm.bakingtime.models.Recipe;
 import net.digitalswarm.bakingtime.models.RecipeSteps;
-
 import java.util.ArrayList;
 
 public class RecipeMasterDetailFragment extends Fragment {
