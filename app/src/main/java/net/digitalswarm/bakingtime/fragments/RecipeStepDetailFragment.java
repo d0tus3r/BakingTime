@@ -1,7 +1,6 @@
 package net.digitalswarm.bakingtime.fragments;
 
 import android.content.Context;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -24,6 +23,11 @@ public class RecipeStepDetailFragment extends Fragment {
     //keys for changing steps
     private static final String STEP_ID_KEY = "id";
     private static final String STEP_KEY = "step";
+    //saved state bundle keys
+    private static final String EXO_POS_KEY = "EXO_POS_KEY";
+    private static final String EXO_FULLSCREEN_KEY = "EXO_FULLSCREEN_KEY";
+    private static final String EXO_STATE_KEY = "EXO_STATE_KEY";
+
     private static final String TAG = RecipeStepDetailFragment.class.getSimpleName();
 
     private RecipeSteps currentStep;
@@ -36,6 +40,11 @@ public class RecipeStepDetailFragment extends Fragment {
     private PlaybackStateCompat.Builder mStateBuilder;
     OnPrevStepsClickListener mPrevCallback;
     OnNextStepsClickListener mNextCallback;
+
+    //exo player states
+    private long mExoPosition;
+    private boolean mExoFullscreen = false;
+    private boolean mExoState = true;
 
     public interface OnPrevStepsClickListener {
         void onPrevStepSelected(int position);
@@ -124,6 +133,11 @@ public class RecipeStepDetailFragment extends Fragment {
 
     }
 
+    //init player url etc
+    private void initExoPlayer() {
+
+    }
+
     private class ExoCallBack extends MediaSessionCompat.Callback {
         @Override
         public void onPlay() {
@@ -149,6 +163,14 @@ public class RecipeStepDetailFragment extends Fragment {
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + " must implement OnStepsClickListener");
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle bundle) {
+        super.onSaveInstanceState(bundle);
+        bundle.putLong(EXO_POS_KEY, mExoPosition);
+        bundle.putBoolean(EXO_FULLSCREEN_KEY, mExoFullscreen);
+        bundle.putBoolean(EXO_STATE_KEY, mExoState);
     }
 
 }
