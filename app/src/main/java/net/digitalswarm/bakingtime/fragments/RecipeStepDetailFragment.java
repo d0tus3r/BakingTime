@@ -40,7 +40,6 @@ public class RecipeStepDetailFragment extends Fragment implements Player.EventLi
     private static final String STEP_KEY = "step";
     //saved state bundle keys
     private static final String EXO_POS_KEY = "EXO_POS_KEY";
-    private static final String EXO_FULLSCREEN_KEY = "EXO_FULLSCREEN_KEY";
     private static final String EXO_STATE_KEY = "EXO_STATE_KEY";
 
     private static final String TAG = RecipeStepDetailFragment.class.getSimpleName();
@@ -49,7 +48,6 @@ public class RecipeStepDetailFragment extends Fragment implements Player.EventLi
     private int currentStepId;
     private String currentStepVideoUrl;
     private SimpleExoPlayer mExoPlayer;
-    //private SimpleExoPlayerView mPlayerView;
     private static MediaSessionCompat mMediaSession;
     private PlaybackStateCompat.Builder mStateBuilder;
     OnPrevStepsClickListener mPrevCallback;
@@ -57,7 +55,6 @@ public class RecipeStepDetailFragment extends Fragment implements Player.EventLi
 
     //exo player states
     private long mExoPosition;
-    private boolean mExoFullscreen = false;
     private boolean mExoState = true;
 
     public interface OnPrevStepsClickListener {
@@ -103,13 +100,11 @@ public class RecipeStepDetailFragment extends Fragment implements Player.EventLi
         if (savedInstanceState != null) {
             mExoPosition = savedInstanceState.getLong(EXO_POS_KEY);
             mExoState = savedInstanceState.getBoolean(EXO_STATE_KEY);
-            mExoFullscreen = savedInstanceState.getBoolean(EXO_FULLSCREEN_KEY);
         }
         //hide view if no videoUrl
         if (currentStepVideoUrl.isEmpty()) {
             mPlayerView.setVisibility(View.GONE);
         } else {
-            initMediaSession();
             initExoPlayer(Uri.parse(currentStepVideoUrl), mPlayerView);
         }
         //assign text view and set text
@@ -163,6 +158,7 @@ public class RecipeStepDetailFragment extends Fragment implements Player.EventLi
     private void initExoPlayer(Uri videoUrl, SimpleExoPlayerView exoView) {
         //test for already established exo player
         if (mExoPlayer == null) {
+            initMediaSession();
             //create trackSelector
             TrackSelector trackSelector = new DefaultTrackSelector();
             //create new instance of exo player with trackselector
@@ -210,7 +206,6 @@ public class RecipeStepDetailFragment extends Fragment implements Player.EventLi
     public void onSaveInstanceState(Bundle bundle) {
         super.onSaveInstanceState(bundle);
         bundle.putLong(EXO_POS_KEY, mExoPosition);
-        bundle.putBoolean(EXO_FULLSCREEN_KEY, mExoFullscreen);
         bundle.putBoolean(EXO_STATE_KEY, mExoState);
     }
 
@@ -237,6 +232,31 @@ public class RecipeStepDetailFragment extends Fragment implements Player.EventLi
             mStateBuilder.setState(PlaybackStateCompat.STATE_PAUSED, mExoPlayer.getCurrentPosition(), 1f);
         }
         mMediaSession.setPlaybackState(mStateBuilder.build());
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        //save position
+        if (mExoPlayer != null) {
+            mExoPosition = mExoPlayer.getCurrentPosition();
+            //save state
+            mExoState = mExoPlayer.getPlayWhenReady();
+        }
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        //stop video and release player
+        if (mExoPlayer != null) {
+            mExoPlayer.stop();
+            mExoPlayer.release();
+            //change media session state to not active
+            mMediaSession.setActive(false);
+        }
+
     }
 
     @Override

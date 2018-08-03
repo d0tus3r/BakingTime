@@ -20,6 +20,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeMas
     RecipeSteps currentRecipeStep;
     int currentRecipeStepsSize;
     ArrayList<RecipeSteps> currentRecipeStepsList;
+    RecipeStepDetailFragment stepDetailFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,12 +30,24 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeMas
         this.currentRecipeStepsList = currentRecipe.getRecipeSteps();
         this.currentRecipeStepsSize = currentRecipeStepsList.size();
         getSupportActionBar().setTitle(currentRecipe.getName());
-        //start ingredients and step list fragments
-        //attach within frame layout on detail_frame
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .add(R.id.detail_frame, RecipeMasterDetailFragment.newInstance(currentRecipe.getIngredients(), currentRecipe.getRecipeSteps()))
-                .commit();
+
+        if (savedInstanceState == null) {
+            //start ingredients and step list fragments
+            //attach within frame layout on detail_frame
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .add(R.id.detail_frame, RecipeMasterDetailFragment.newInstance(currentRecipe.getIngredients(), currentRecipe.getRecipeSteps()))
+                    .commit();
+        }
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle bundle) {
+        super.onSaveInstanceState(bundle);
+        if (stepDetailFragment != null) {
+            getSupportFragmentManager().putFragment(bundle, "fragment", stepDetailFragment);
+        }
     }
 
     @Override
@@ -43,7 +56,8 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeMas
         //Toast.makeText(this, "Recipe step selected is: " + currentRecipeStep.getDescription(), Toast.LENGTH_SHORT).show();
         //work on fragment instance constructor
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.detail_frame, RecipeStepDetailFragment.newInstance(currentRecipeStep, Integer.parseInt(currentRecipeStep.getId())));
+        stepDetailFragment = RecipeStepDetailFragment.newInstance(currentRecipeStep, Integer.parseInt(currentRecipeStep.getId()));
+        transaction.replace(R.id.detail_frame, stepDetailFragment);
         transaction.commit();
     }
 
@@ -55,7 +69,8 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeMas
             //Toast.makeText(this, "Recipe step selected is: " + currentRecipeStep.getDescription(), Toast.LENGTH_SHORT).show();
             //work on fragment instance constructor
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.detail_frame, RecipeStepDetailFragment.newInstance(currentRecipeStep, currentRecipeStepId));
+            stepDetailFragment = RecipeStepDetailFragment.newInstance(currentRecipeStep, currentRecipeStepId);
+            transaction.replace(R.id.detail_frame, stepDetailFragment);
             transaction.commit();
         }
 
@@ -69,7 +84,8 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeMas
             //Toast.makeText(this, "Recipe step selected is: " + currentRecipeStep.getDescription(), Toast.LENGTH_SHORT).show();
             //work on fragment instance constructor
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.detail_frame, RecipeStepDetailFragment.newInstance(currentRecipeStep, currentRecipeStepId));
+            stepDetailFragment = RecipeStepDetailFragment.newInstance(currentRecipeStep, currentRecipeStepId);
+            transaction.replace(R.id.detail_frame, stepDetailFragment);
             transaction.commit();
         }
 
