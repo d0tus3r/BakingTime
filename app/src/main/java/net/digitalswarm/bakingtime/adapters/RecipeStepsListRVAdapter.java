@@ -23,9 +23,11 @@ public class RecipeStepsListRVAdapter extends RecyclerView.Adapter<RecipeStepsLi
 
     public class RecipeStepsListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         final TextView recipeStepsTextView;
+        final TextView recipeStepsIdTextView;
 
         RecipeStepsListViewHolder(View view) {
             super(view);
+            recipeStepsIdTextView = view.findViewById(R.id.recipe_steps_id_tv);
             recipeStepsTextView = view.findViewById(R.id.recipe_steps_tv); //assign view
             view.setOnClickListener(this);
         }
@@ -53,6 +55,7 @@ public class RecipeStepsListRVAdapter extends RecyclerView.Adapter<RecipeStepsLi
     @Override
     public void onBindViewHolder(final RecipeStepsListViewHolder recipeHolder, int position){
         RecipeSteps currentRecipeStep = mRecipeStepsList.get(position);
+        recipeHolder.recipeStepsIdTextView.setText(currentRecipeStep.getId());
         recipeHolder.recipeStepsTextView.setText(currentRecipeStep.getShortDescription());
     }
 
