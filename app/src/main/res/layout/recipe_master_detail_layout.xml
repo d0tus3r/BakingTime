@@ -29,5 +29,4 @@
         android:padding="@dimen/basePadding"
         android:id="@+id/recipe_steps_rv"/>
 
-
 </LinearLayout>
