@@ -16,6 +16,7 @@ import net.digitalswarm.bakingtime.models.Ingredients;
 import net.digitalswarm.bakingtime.models.Recipe;
 import net.digitalswarm.bakingtime.utilities.RecipeService;
 import net.digitalswarm.bakingtime.utilities.RetrofitInstance;
+import net.digitalswarm.bakingtime.widgets.IngredientWidgetProvider;
 
 import java.util.ArrayList;
 
@@ -71,6 +72,7 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeListR
         String ingredients = convertIngredientsList(ingredientsList);
         prefEditor.putString("INGREDIENTS", ingredients);
         prefEditor.apply();
+        IngredientWidgetProvider.updateBroadcast(context);
         Class destinationClass = RecipeDetailActivity.class;
         //create a new intent to launch detail activity, using current moviePosterList position
         Intent detailActivityIntent = new Intent(context, destinationClass);
