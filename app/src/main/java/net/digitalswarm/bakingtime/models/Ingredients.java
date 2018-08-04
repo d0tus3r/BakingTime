@@ -25,6 +25,11 @@ public class Ingredients implements Parcelable {
         this.measurement = parcel.readString();
         this.ingredient = parcel.readString();
     }
+    //used for widget - format: Quantity[space]Measurement[tab]Ingredient
+    @Override
+    public String toString() {
+        return quantity + " " + measurement + "\t" + ingredient;
+    }
 
     //parcel object creator
     public static final Creator<Ingredients> CREATOR = new Creator<Ingredients>() {
