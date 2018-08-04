@@ -3,8 +3,8 @@ package net.digitalswarm.bakingtime.fragments;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
@@ -50,8 +50,8 @@ public class RecipeStepDetailFragment extends Fragment implements Player.EventLi
     private SimpleExoPlayer mExoPlayer;
     private static MediaSessionCompat mMediaSession;
     private PlaybackStateCompat.Builder mStateBuilder;
-    OnPrevStepsClickListener mPrevCallback;
-    OnNextStepsClickListener mNextCallback;
+    private OnPrevStepsClickListener mPrevCallback;
+    private OnNextStepsClickListener mNextCallback;
 
     //exo player states
     private long mExoPosition;
@@ -89,7 +89,7 @@ public class RecipeStepDetailFragment extends Fragment implements Player.EventLi
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //inflate layout
         View rootView = inflater.inflate(R.layout.recipe_step_detail_fragment, container, false);
         //exoplayer
@@ -134,8 +134,7 @@ public class RecipeStepDetailFragment extends Fragment implements Player.EventLi
         mMediaSession = new MediaSessionCompat(getContext(), TAG);
         //enable callbacks from buttons and controls
         mMediaSession.setFlags(
-                MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
-                        MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS);
+                MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS);
         //keep buttons from restarting player when not in focus
         mMediaSession.setMediaButtonReceiver(null);
         //set initial playback state
@@ -203,7 +202,7 @@ public class RecipeStepDetailFragment extends Fragment implements Player.EventLi
     }
 
     @Override
-    public void onSaveInstanceState(Bundle bundle) {
+    public void onSaveInstanceState(@NonNull Bundle bundle) {
         super.onSaveInstanceState(bundle);
         bundle.putLong(EXO_POS_KEY, mExoPosition);
         bundle.putBoolean(EXO_STATE_KEY, mExoState);

@@ -1,6 +1,7 @@
 package net.digitalswarm.bakingtime.adapters;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +17,6 @@ import java.util.ArrayList;
 public class RecipeListRVAdapter extends RecyclerView.Adapter<RecipeListRVAdapter.RecipeListViewHolder> {
 
     private ArrayList<Recipe> mRecipeList;
-    private final Context mContext;
     private final RecipeListRVAdapterClickListener mClickListener;
 
     public interface RecipeListRVAdapterClickListener {
@@ -39,20 +39,21 @@ public class RecipeListRVAdapter extends RecyclerView.Adapter<RecipeListRVAdapte
     }
     //adapter constructor
     public RecipeListRVAdapter(Context context, ArrayList<Recipe> recipeList, RecipeListRVAdapterClickListener clickListener){
-        this.mContext = context;
+        Context mContext = context;
         this.mRecipeList = recipeList;
         this.mClickListener = clickListener;
     }
 
+    @NonNull
     @Override
-    public RecipeListViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+    public RecipeListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
         View recipeItemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.recipe_list_item, parent, false);
         return new RecipeListViewHolder(recipeItemView);
     }
 
     @Override
-    public void onBindViewHolder(final RecipeListViewHolder recipeHolder, int position){
+    public void onBindViewHolder(@NonNull final RecipeListViewHolder recipeHolder, int position){
         Recipe currentRecipe = mRecipeList.get(position);
         recipeHolder.recipeTextView.setText(currentRecipe.getName());
     }

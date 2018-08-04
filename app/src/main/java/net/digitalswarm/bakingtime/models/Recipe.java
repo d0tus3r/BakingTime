@@ -77,7 +77,7 @@ public class Recipe implements Parcelable {
     }
 
 
-    public String getId() {
+    private String getId() {
         return id;
     }
 
@@ -94,11 +94,11 @@ public class Recipe implements Parcelable {
         return recipeSteps;
     }
 
-    public String getServings() {
+    private String getServings() {
         return servings;
     }
 
-    public String getImageId() {
+    private String getImageId() {
         return imageId;
     }
 }

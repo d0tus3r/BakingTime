@@ -2,11 +2,11 @@ package net.digitalswarm.bakingtime;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 import net.digitalswarm.bakingtime.adapters.RecipeListRVAdapter;
 import net.digitalswarm.bakingtime.models.Recipe;
@@ -21,10 +21,6 @@ import retrofit2.Response;
 
 
 public class RecipeListActivity extends AppCompatActivity implements RecipeListRVAdapter.RecipeListRVAdapterClickListener {
-    //views
-    private RecyclerView recipeRV;
-    private GridLayoutManager gridLayout;
-    private RecipeListRVAdapter recipeListRVAdapter;
     private ArrayList<Recipe> recipeList;
 
     @Override
@@ -38,12 +34,12 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeListR
         //queue call request
         call.enqueue(new Callback<ArrayList<Recipe>>() {
             @Override
-            public void onResponse(Call<ArrayList<Recipe>> call, Response<ArrayList<Recipe>> response) {
+            public void onResponse(@NonNull Call<ArrayList<Recipe>> call, @NonNull Response<ArrayList<Recipe>> response) {
                 recipeList = response.body();
                 generateRecipeList(recipeList);
             }
             @Override
-            public void onFailure(Call<ArrayList<Recipe>> call, Throwable t) {
+            public void onFailure(@NonNull Call<ArrayList<Recipe>> call, @NonNull Throwable t) {
                 //todo: toast or log
             }
         });
@@ -52,11 +48,11 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeListR
     }
 
     private void generateRecipeList(ArrayList<Recipe> recipeList) {
-        recipeRV = findViewById(R.id.recipe_list_rv);
-        gridLayout = new GridLayoutManager(this, 1);
+        RecyclerView recipeRV = findViewById(R.id.recipe_list_rv);
+        GridLayoutManager gridLayout = new GridLayoutManager(this, 1);
         recipeRV.setHasFixedSize(true);
         recipeRV.setLayoutManager(gridLayout);
-        recipeListRVAdapter = new RecipeListRVAdapter(this, recipeList, this);
+        RecipeListRVAdapter recipeListRVAdapter = new RecipeListRVAdapter(this, recipeList, this);
         recipeRV.setAdapter(recipeListRVAdapter);
     }
 

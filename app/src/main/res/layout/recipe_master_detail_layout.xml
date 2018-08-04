@@ -23,7 +23,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/basePadding"
-                android:text="Ingredients:"
+                android:text="@string/ingredients"
                 android:textStyle="bold"
                 android:textSize="18sp"/>
 
@@ -55,7 +55,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/basePadding"
-                android:text="Steps:"
+                android:text="@string/steps"
                 android:textStyle="bold"
                 android:textSize="18sp"/>
 

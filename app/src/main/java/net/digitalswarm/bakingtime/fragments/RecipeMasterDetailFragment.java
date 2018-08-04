@@ -2,6 +2,7 @@ package net.digitalswarm.bakingtime.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,18 +18,13 @@ import java.util.ArrayList;
 
 public class RecipeMasterDetailFragment extends Fragment {
     private ArrayList<Ingredients> mIngredientsList;
-    public static final String INGREDIENTS_KEY = "INGREDIENTS";
+    private static final String INGREDIENTS_KEY = "INGREDIENTS";
     private ArrayList<RecipeSteps> mRecipeStepsList;
-    public static final String RECIPE_STEPS_KEY = "RECIPE_STEPS";
+    private static final String RECIPE_STEPS_KEY = "RECIPE_STEPS";
 
-    //views
-    private RecyclerView ingredientsRV;
-    private RecyclerView recipeStepsRV;
-    private IngredientsRVAdapter ingredientsRVAdapter;
-    private RecipeStepsListRVAdapter recipeStepsRVAdapter;
-    LinearLayoutManager ingredientsLayout;
-    LinearLayoutManager recipeStepsLayout;
-    OnStepsClickListener mCallback;
+    private LinearLayoutManager ingredientsLayout;
+    private LinearLayoutManager recipeStepsLayout;
+    private OnStepsClickListener mCallback;
 
     public interface OnStepsClickListener {
         void onStepSelected(int position);
@@ -57,24 +53,24 @@ public class RecipeMasterDetailFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //inflate fragment layout
         View rootView = inflater.inflate(R.layout.recipe_master_detail_layout, container, false);
         //assign views
         Context context = getContext();
         //ingredients
-        ingredientsRV = rootView.findViewById(R.id.ingredients_rv);
+        RecyclerView ingredientsRV = rootView.findViewById(R.id.ingredients_rv);
         ingredientsLayout = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         ingredientsRV.setHasFixedSize(true);
         ingredientsRV.setLayoutManager(ingredientsLayout);
-        ingredientsRVAdapter = new IngredientsRVAdapter(context, mIngredientsList);
+        IngredientsRVAdapter ingredientsRVAdapter = new IngredientsRVAdapter(context, mIngredientsList);
         ingredientsRV.setAdapter(ingredientsRVAdapter);
         //recipe steps
-        recipeStepsRV = rootView.findViewById(R.id.recipe_steps_rv);
+        RecyclerView recipeStepsRV = rootView.findViewById(R.id.recipe_steps_rv);
         recipeStepsLayout = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recipeStepsRV.setHasFixedSize(true);
         recipeStepsRV.setLayoutManager(recipeStepsLayout);
-        recipeStepsRVAdapter = new RecipeStepsListRVAdapter(context, mRecipeStepsList, new RecipeStepsListRVAdapter.RecipeStepsListRVAdapterClickListener() {
+        RecipeStepsListRVAdapter recipeStepsRVAdapter = new RecipeStepsListRVAdapter(context, mRecipeStepsList, new RecipeStepsListRVAdapter.RecipeStepsListRVAdapterClickListener() {
             @Override
             public void onClick(int pos) {
                 mCallback.onStepSelected(pos);
@@ -84,11 +80,10 @@ public class RecipeMasterDetailFragment extends Fragment {
 
         return rootView;
     }
-
+    //assign callback to click listener for step selection
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
         try {
             mCallback = (OnStepsClickListener) context;
         } catch (ClassCastException e) {

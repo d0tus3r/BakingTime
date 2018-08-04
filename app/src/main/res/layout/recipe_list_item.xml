@@ -20,7 +20,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/recipe_list_iv"
             android:background="@color/colorBg"
-            android:padding="8dp"/>
+            android:padding="8dp"
+            android:contentDescription="Recipe Image" />
 
         <TextView
             android:layout_width="match_parent"

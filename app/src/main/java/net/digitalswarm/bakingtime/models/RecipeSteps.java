@@ -80,7 +80,7 @@ public class RecipeSteps implements Parcelable {
         return videoUrl;
     }
 
-    public String getThumbnailUrl() {
+    private String getThumbnailUrl() {
         return thumbnailUrl;
     }
 }

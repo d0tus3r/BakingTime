@@ -1,6 +1,7 @@
 package net.digitalswarm.bakingtime.adapters;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +16,6 @@ import java.util.ArrayList;
 public class IngredientsRVAdapter extends RecyclerView.Adapter<IngredientsRVAdapter.IngredientsViewHolder> {
     //vars
     private ArrayList<Ingredients> mIngredientsList;
-    private final Context mContext;
 
     public class IngredientsViewHolder extends RecyclerView.ViewHolder {
         final TextView IngredientsQuantityTV;
@@ -32,19 +32,20 @@ public class IngredientsRVAdapter extends RecyclerView.Adapter<IngredientsRVAdap
     }
     //adapter constructor
     public IngredientsRVAdapter(Context context, ArrayList<Ingredients> ingredientsList) {
-        this.mContext = context;
+        Context mContext = context;
         this.mIngredientsList = ingredientsList;
     }
 
+    @NonNull
     @Override
-    public IngredientsViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+    public IngredientsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
         View ingredientsItemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.recipe_steps_ingredients_item, parent, false);
         return new IngredientsViewHolder(ingredientsItemView);
     }
 
     @Override
-    public void onBindViewHolder(final IngredientsViewHolder ingredientsHolder, int position){
+    public void onBindViewHolder(@NonNull final IngredientsViewHolder ingredientsHolder, int position){
         Ingredients currentIngredient = mIngredientsList.get(position);
         ingredientsHolder.IngredientsQuantityTV.setText(currentIngredient.getQuantity());
         ingredientsHolder.IngredientsMeasureTV.setText(currentIngredient.getMeasurement());
