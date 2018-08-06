@@ -2,20 +2,13 @@ package net.digitalswarm.bakingtime.widgets;
 
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
-import android.content.ComponentName;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.text.TextUtils;
 import android.widget.RemoteViews;
 
 import net.digitalswarm.bakingtime.R;
-import net.digitalswarm.bakingtime.models.Ingredients;
-import net.digitalswarm.bakingtime.models.Recipe;
-
-import java.util.ArrayList;
 
 
 public class IngredientWidgetProvider extends AppWidgetProvider {
@@ -37,7 +30,7 @@ public class IngredientWidgetProvider extends AppWidgetProvider {
 
     //set views  with shared pref data
     private static void updateIngredientWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
-        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.recipe_ingredients_widget);
+        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_ingredients_base);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         String ingredients = prefs.getString("INGREDIENTS", "Add a recipe");
         String recipeName = prefs.getString("RECIPE_NAME", "Add a recipe");
