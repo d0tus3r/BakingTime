@@ -1,5 +1,7 @@
 package net.digitalswarm.bakingtime;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,6 +12,8 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+
+import com.google.gson.Gson;
 
 import net.digitalswarm.bakingtime.adapters.RecipeListRVAdapter;
 import net.digitalswarm.bakingtime.models.Ingredients;
@@ -25,7 +29,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class RecipeListActivity extends AppCompatActivity implements RecipeListRVAdapter.RecipeListRVAdapterClickListener {
+public class RecipeListActivity extends AppCompatActivity implements RecipeListRVAdapter.RecipeListRVAdapterClickListener, SharedPreferences.OnSharedPreferenceChangeListener {
     private ArrayList<Recipe> recipeList;
 
     @Override
@@ -65,14 +69,18 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeListR
     public void onClick(int position){
         //assign context and activity class for scope
         Context context = this;
+        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
         //save recipe ingredients and name to shared pref for widget
         SharedPreferences.Editor prefEditor = PreferenceManager.getDefaultSharedPreferences(context).edit();
         prefEditor.putString("RECIPE_NAME", recipeList.get(position).getName());
         ArrayList<Ingredients> ingredientsList = recipeList.get(position).getIngredients();
-        String ingredients = convertIngredientsList(ingredientsList);
-        prefEditor.putString("INGREDIENTS", ingredients);
-        prefEditor.apply();
-        IngredientWidgetProvider.updateBroadcast(context);
+        Gson gson = new Gson();
+        String json = gson.toJson(ingredientsList);
+        String ingredientsKey = "INGREDIENTS_KEY";
+        prefEditor.remove(ingredientsKey).commit();
+        prefEditor.putString(ingredientsKey, json);
+        prefEditor.commit();
+
         Class destinationClass = RecipeDetailActivity.class;
         //create a new intent to launch detail activity, using current moviePosterList position
         Intent detailActivityIntent = new Intent(context, destinationClass);
@@ -80,15 +88,16 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeListR
         startActivity(detailActivityIntent);
     }
 
-    //convert ingredients to a string for easy widget display
-    public static String convertIngredientsList(ArrayList<Ingredients> ingredientsList) {
-        String ingredientsString;
-        ArrayList<String> convertedIngredientsStringList = new ArrayList<>();
-        for (Ingredients ingredient : ingredientsList) {
-            convertedIngredientsStringList.add(ingredient.toString());
-        }
-        //join String list as a single string with new line
-        ingredientsString = TextUtils.join("\n", convertedIngredientsStringList);
-        return ingredientsString;
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        //let widget know shared pref has been updated with new recipe info
+        //create intent update
+        Intent intent = new Intent(this, IngredientWidgetProvider.class);
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        //Get instance of app widget manager and update each widget id if multiple
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this, IngredientWidgetProvider.class));
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetIds);
+        this.sendBroadcast(intent);
     }
 }
