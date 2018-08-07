@@ -1,6 +1,7 @@
 package net.digitalswarm.bakingtime.widgets;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.widget.RemoteViews;
@@ -30,7 +31,7 @@ public class IngredientWidgetViewsFactory implements RemoteViewsService.RemoteVi
         mRecipeName = prefs.getString("RECIPE_NAME", "Add a recipe");
         //grab ingredientslist from shared pref
         Gson gson = new Gson();
-        String jsonResponse = prefs.getString("INGREDIENTS_KEY", "");
+        String jsonResponse = prefs.getString("INGREDIENTS_KEY", "Default String");
         mIngredientsList = gson.fromJson(jsonResponse, new TypeToken<ArrayList<Ingredients>>(){}.getType());
 
     }
@@ -57,9 +58,7 @@ public class IngredientWidgetViewsFactory implements RemoteViewsService.RemoteVi
 
     @Override
     public RemoteViews getViewAt(int position) {
-        RemoteViews remoteViews = new RemoteViews(mContext.getPackageName(), R.layout.widget_ingredients_base);
-        remoteViews.setTextViewText(R.id.widget_ingredient_item_tv, mIngredientsList.get(position).toString());
-        return remoteViews;
+    //redo
     }
 
     @Override
@@ -69,16 +68,16 @@ public class IngredientWidgetViewsFactory implements RemoteViewsService.RemoteVi
 
     @Override
     public int getViewTypeCount() {
-        return 0;
+        return 1;
     }
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
 
     @Override
     public boolean hasStableIds() {
-        return false;
+        return true;
     }
 }

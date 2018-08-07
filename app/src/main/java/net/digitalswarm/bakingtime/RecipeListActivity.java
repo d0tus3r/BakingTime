@@ -11,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 
 import com.google.gson.Gson;
 
@@ -36,6 +35,7 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeListR
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recipe_list_activity);
+        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
         //create retrofit instance interface
         RecipeService service = RetrofitInstance.getRetrofitInstance().create(RecipeService.class);
         //Call service method to get data
@@ -69,15 +69,15 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeListR
     public void onClick(int position){
         //assign context and activity class for scope
         Context context = this;
-        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
         //save recipe ingredients and name to shared pref for widget
         SharedPreferences.Editor prefEditor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        prefEditor.remove("RECIPE_NAME").commit();
         prefEditor.putString("RECIPE_NAME", recipeList.get(position).getName());
         ArrayList<Ingredients> ingredientsList = recipeList.get(position).getIngredients();
         Gson gson = new Gson();
         String json = gson.toJson(ingredientsList);
         String ingredientsKey = "INGREDIENTS_KEY";
-        prefEditor.remove(ingredientsKey).commit();
+        //prefEditor.remove(ingredientsKey).commit();
         prefEditor.putString(ingredientsKey, json);
         prefEditor.commit();
 
