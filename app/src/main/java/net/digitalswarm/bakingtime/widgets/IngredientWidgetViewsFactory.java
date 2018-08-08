@@ -1,7 +1,6 @@
 package net.digitalswarm.bakingtime.widgets;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.widget.RemoteViews;
@@ -9,8 +8,6 @@ import android.widget.RemoteViewsService;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
-import net.digitalswarm.bakingtime.R;
 import net.digitalswarm.bakingtime.models.Ingredients;
 
 import java.util.ArrayList;

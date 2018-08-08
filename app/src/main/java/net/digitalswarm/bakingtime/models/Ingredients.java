@@ -1,10 +1,15 @@
 package net.digitalswarm.bakingtime.models;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 
@@ -71,5 +76,14 @@ public class Ingredients implements Parcelable {
 
     public String getIngredient() {
         return ingredient;
+    }
+    //method to handle converting shared pref data into ingredient
+    private static ArrayList<Ingredients> getIngredientsData(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences("SharedPrefs", Context.MODE_PRIVATE);
+        //grab ingredientslist from shared pref
+        Gson gson = new Gson();
+        String jsonResponse = prefs.getString("INGREDIENTS_KEY", "Default String");
+        ArrayList<Ingredients> ingredientsList = gson.fromJson(jsonResponse, new TypeToken<ArrayList<Ingredients>>(){}.getType());
+        return ingredientsList;
     }
 }
