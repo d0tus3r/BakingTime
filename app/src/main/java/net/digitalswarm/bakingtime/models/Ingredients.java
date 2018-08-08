@@ -36,7 +36,7 @@ public class Ingredients implements Parcelable {
     //used for widget - format: Quantity[space]Measurement[tab]Ingredient
     @Override
     public String toString() {
-        return quantity + " " + measurement + "\t" + ingredient;
+        return quantity + " " + measurement + "   " + ingredient;
     }
 
     //parcel object creator
@@ -76,14 +76,5 @@ public class Ingredients implements Parcelable {
 
     public String getIngredient() {
         return ingredient;
-    }
-    //method to handle converting shared pref data into ingredient
-    private static ArrayList<Ingredients> getIngredientsData(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences("SharedPrefs", Context.MODE_PRIVATE);
-        //grab ingredientslist from shared pref
-        Gson gson = new Gson();
-        String jsonResponse = prefs.getString("INGREDIENTS_KEY", "Default String");
-        ArrayList<Ingredients> ingredientsList = gson.fromJson(jsonResponse, new TypeToken<ArrayList<Ingredients>>(){}.getType());
-        return ingredientsList;
     }
 }

@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -28,14 +29,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class RecipeListActivity extends AppCompatActivity implements RecipeListRVAdapter.RecipeListRVAdapterClickListener, SharedPreferences.OnSharedPreferenceChangeListener {
+public class RecipeListActivity extends AppCompatActivity implements RecipeListRVAdapter.RecipeListRVAdapterClickListener {
     private ArrayList<Recipe> recipeList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recipe_list_activity);
-        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
         //create retrofit instance interface
         RecipeService service = RetrofitInstance.getRetrofitInstance().create(RecipeService.class);
         //Call service method to get data
@@ -71,33 +71,21 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeListR
         Context context = this;
         //save recipe ingredients and name to shared pref for widget
         SharedPreferences.Editor prefEditor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        prefEditor.remove("RECIPE_NAME").commit();
-        prefEditor.putString("RECIPE_NAME", recipeList.get(position).getName());
+        //prefEditor.putString("RECIPE_NAME", recipeList.get(position).getName());
         ArrayList<Ingredients> ingredientsList = recipeList.get(position).getIngredients();
         Gson gson = new Gson();
         String json = gson.toJson(ingredientsList);
         String ingredientsKey = "INGREDIENTS_KEY";
-        //prefEditor.remove(ingredientsKey).commit();
         prefEditor.putString(ingredientsKey, json);
-        prefEditor.commit();
+        prefEditor.apply();
+        IngredientWidgetProvider.updateBroadcast(context);
+
+        Log.i("WidgetBS", json);
 
         Class destinationClass = RecipeDetailActivity.class;
         //create a new intent to launch detail activity, using current moviePosterList position
         Intent detailActivityIntent = new Intent(context, destinationClass);
         detailActivityIntent.putExtra("Recipe", recipeList.get(position));
         startActivity(detailActivityIntent);
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        //let widget know shared pref has been updated with new recipe info
-        //create intent update
-        Intent intent = new Intent(this, IngredientWidgetProvider.class);
-        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        //Get instance of app widget manager and update each widget id if multiple
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
-        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this, IngredientWidgetProvider.class));
-        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetIds);
-        this.sendBroadcast(intent);
     }
 }

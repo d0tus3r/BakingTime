@@ -29,6 +29,12 @@
             <meta-data android:name="android.appwidget.provider"
                 android:resource="@xml/recipe_widget_xml" />
         </receiver>
+        <!--Who would win: rewriting my widget code over and over trying to get data to bind to my remote views
+        or two little lines in the manifest to register the service...
+        (╯°□°)╯︵ ┻━┻ -->
+        <service
+            android:name=".widgets.IngredientWidgetViewsService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
     </application>
 
 
