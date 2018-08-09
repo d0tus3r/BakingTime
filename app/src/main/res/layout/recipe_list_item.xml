@@ -21,7 +21,7 @@
             android:id="@+id/recipe_list_iv"
             android:background="@color/colorBg"
             android:padding="8dp"
-            android:contentDescription="Recipe Image" />
+            android:contentDescription="@string/recipe_image" />
 
         <TextView
             android:layout_width="match_parent"

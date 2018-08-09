@@ -1,17 +1,8 @@
 package net.digitalswarm.bakingtime.models;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.preference.PreferenceManager;
-import android.text.TextUtils;
-
-import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
-import com.google.gson.reflect.TypeToken;
-
-import java.util.ArrayList;
 
 public class Ingredients implements Parcelable {
     @SerializedName("quantity")
