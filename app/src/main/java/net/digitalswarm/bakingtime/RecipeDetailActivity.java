@@ -1,5 +1,6 @@
 package net.digitalswarm.bakingtime;
 
+import android.content.res.Configuration;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -23,27 +24,51 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeMas
     private int currentRecipeStepsSize;
     private ArrayList<RecipeSteps> currentRecipeStepsList;
     private RecipeStepDetailFragment stepDetailFragment;
+    private RecipeMasterDetailFragment recipeMasterDetailFragment;
+
+    //boolean for 2 fragments when landscape mode
+    private boolean twoFragments;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.recipe_detail_activity);
         //assign recipe from intent
         this.currentRecipe = getIntent().getParcelableExtra("Recipe");
         this.currentRecipeStepsList = currentRecipe.getRecipeSteps();
         this.currentRecipeStepsSize = currentRecipeStepsList.size();
-        getSupportActionBar().setTitle(currentRecipe.getName());
+        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            twoFragments = true;
+            setContentView(R.layout.recipe_detail_activity_landscape);
+            if (savedInstanceState == null) {
+                //start by displaying first step
+                currentRecipeStep = currentRecipeStepsList.get(0);
+                //start ingredients and step list fragments
+                //attach within frame layout on detail_frame
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                recipeMasterDetailFragment = RecipeMasterDetailFragment.newInstance(currentRecipe.getIngredients(), currentRecipe.getRecipeSteps());
+                stepDetailFragment = RecipeStepDetailFragment.newInstance(currentRecipeStep, Integer.parseInt(currentRecipeStep.getId()));
+                transaction.add(R.id.detail_land_left_frame, recipeMasterDetailFragment);
+                transaction.add(R.id.detail_land_right_frame, stepDetailFragment);
+                transaction.commit();
+            }
+
+        } else {
+            twoFragments = false;
+            setContentView(R.layout.recipe_detail_activity);
+            if (savedInstanceState == null) {
+                //start ingredients and step list fragments
+                //attach within frame layout on detail_frame
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .add(R.id.detail_frame, RecipeMasterDetailFragment.newInstance(currentRecipe.getIngredients(), currentRecipe.getRecipeSteps()))
+                        .commit();
+            }
+
+        }
         //use UP to return to recipe list
+        getSupportActionBar().setTitle(currentRecipe.getName());
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-
-        if (savedInstanceState == null) {
-            //start ingredients and step list fragments
-            //attach within frame layout on detail_frame
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .add(R.id.detail_frame, RecipeMasterDetailFragment.newInstance(currentRecipe.getIngredients(), currentRecipe.getRecipeSteps()))
-                    .commit();
-        }
     }
 
     //store step fragment onSaveInstanceState
@@ -60,9 +85,15 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeMas
     public void onStepSelected(int position) {
         currentRecipeStep = currentRecipeStepsList.get(position);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        stepDetailFragment = RecipeStepDetailFragment.newInstance(currentRecipeStep, Integer.parseInt(currentRecipeStep.getId()));
-        transaction.replace(R.id.detail_frame, stepDetailFragment);
-        transaction.commit();
+        if (twoFragments) {
+            stepDetailFragment = RecipeStepDetailFragment.newInstance(currentRecipeStep, Integer.parseInt(currentRecipeStep.getId()));
+            transaction.replace(R.id.detail_land_right_frame, stepDetailFragment);
+            transaction.commit();
+        } else {
+            stepDetailFragment = RecipeStepDetailFragment.newInstance(currentRecipeStep, Integer.parseInt(currentRecipeStep.getId()));
+            transaction.replace(R.id.detail_frame, stepDetailFragment);
+            transaction.commit();
+        }
     }
     //load previous step as long as it exists
     @Override
@@ -71,9 +102,15 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeMas
             currentRecipeStep = currentRecipeStepsList.get(position - 1);
             int currentRecipeStepId = Integer.parseInt(currentRecipeStep.getId());
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            stepDetailFragment = RecipeStepDetailFragment.newInstance(currentRecipeStep, currentRecipeStepId);
-            transaction.replace(R.id.detail_frame, stepDetailFragment);
-            transaction.commit();
+            if (twoFragments) {
+                stepDetailFragment = RecipeStepDetailFragment.newInstance(currentRecipeStep, currentRecipeStepId);
+                transaction.replace(R.id.detail_land_right_frame, stepDetailFragment);
+                transaction.commit();
+            } else {
+                stepDetailFragment = RecipeStepDetailFragment.newInstance(currentRecipeStep, currentRecipeStepId);
+                transaction.replace(R.id.detail_frame, stepDetailFragment);
+                transaction.commit();
+            }
         }
     }
     //load next step as long as there is another step in list
@@ -83,9 +120,15 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeMas
             currentRecipeStep = currentRecipeStepsList.get(position + 1);
             int currentRecipeStepId = Integer.parseInt(currentRecipeStep.getId());
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            stepDetailFragment = RecipeStepDetailFragment.newInstance(currentRecipeStep, currentRecipeStepId);
-            transaction.replace(R.id.detail_frame, stepDetailFragment);
-            transaction.commit();
+            if (twoFragments) {
+                stepDetailFragment = RecipeStepDetailFragment.newInstance(currentRecipeStep, currentRecipeStepId);
+                transaction.replace(R.id.detail_land_right_frame, stepDetailFragment);
+                transaction.commit();
+            } else {
+                stepDetailFragment = RecipeStepDetailFragment.newInstance(currentRecipeStep, currentRecipeStepId);
+                transaction.replace(R.id.detail_frame, stepDetailFragment);
+                transaction.commit();
+            }
         }
     }
     //Up / home action bar setup
