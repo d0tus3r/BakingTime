@@ -3,7 +3,10 @@ package net.digitalswarm.bakingtime;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 
 import net.digitalswarm.bakingtime.fragments.RecipeMasterDetailFragment;
 import net.digitalswarm.bakingtime.fragments.RecipeStepDetailFragment;
@@ -29,6 +32,9 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeMas
         this.currentRecipeStepsList = currentRecipe.getRecipeSteps();
         this.currentRecipeStepsSize = currentRecipeStepsList.size();
         getSupportActionBar().setTitle(currentRecipe.getName());
+        //use UP to return to recipe list
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         if (savedInstanceState == null) {
             //start ingredients and step list fragments
@@ -81,5 +87,16 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeMas
             transaction.replace(R.id.detail_frame, stepDetailFragment);
             transaction.commit();
         }
+    }
+    //Up / home action bar setup
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
@@ -57,6 +58,8 @@ public class RecipeStepDetailFragment extends Fragment implements Player.EventLi
     private OnNextStepsClickListener mNextCallback;
     private Context mContext;
     SimpleExoPlayerView mPlayerView;
+    //get instance of fragment for mplayer setup
+    private FragmentActivity mActivity;
 
     //exo player states
     private long mExoPosition;
@@ -92,6 +95,7 @@ public class RecipeStepDetailFragment extends Fragment implements Player.EventLi
         currentStepId = getArguments().getInt(STEP_ID_KEY);
         currentStep = getArguments().getParcelable(STEP_KEY);
         mContext = getContext();
+        mActivity = getActivity();
     }
 
     @Override
@@ -260,15 +264,10 @@ public class RecipeStepDetailFragment extends Fragment implements Player.EventLi
             mExoState = mExoPlayer.getPlayWhenReady();
         }
 
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        //stop video and release player
         if (mExoPlayer != null) {
             mExoPlayer.stop();
             mExoPlayer.release();
+            mExoPlayer = null;
             //change media session state to not active
             mMediaSession.setActive(false);
         }
