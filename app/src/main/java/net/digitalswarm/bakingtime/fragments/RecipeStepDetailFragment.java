@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.exoplayer2.ExoPlaybackException;
@@ -29,6 +30,7 @@ import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.squareup.picasso.Picasso;
 
 import net.digitalswarm.bakingtime.R;
 import net.digitalswarm.bakingtime.models.RecipeSteps;
@@ -47,11 +49,14 @@ public class RecipeStepDetailFragment extends Fragment implements Player.EventLi
     private RecipeSteps currentStep;
     private int currentStepId;
     private String currentStepVideoUrl;
+    private String currentStepImageUrl;
     private SimpleExoPlayer mExoPlayer;
     private static MediaSessionCompat mMediaSession;
     private PlaybackStateCompat.Builder mStateBuilder;
     private OnPrevStepsClickListener mPrevCallback;
     private OnNextStepsClickListener mNextCallback;
+    private Context mContext;
+    SimpleExoPlayerView mPlayerView;
 
     //exo player states
     private long mExoPosition;
@@ -86,6 +91,7 @@ public class RecipeStepDetailFragment extends Fragment implements Player.EventLi
         //assign recipe data
         currentStepId = getArguments().getInt(STEP_ID_KEY);
         currentStep = getArguments().getParcelable(STEP_KEY);
+        mContext = getContext();
     }
 
     @Override
@@ -93,9 +99,19 @@ public class RecipeStepDetailFragment extends Fragment implements Player.EventLi
         //inflate layout
         View rootView = inflater.inflate(R.layout.recipe_step_detail_fragment, container, false);
         //exoplayer
-        SimpleExoPlayerView mPlayerView = rootView.findViewById(R.id.recipe_step_exo_view);
+        mPlayerView = rootView.findViewById(R.id.recipe_step_exo_view);
+        ImageView currentStepImageView = rootView.findViewById(R.id.recipe_step_iv);
         currentStepVideoUrl = currentStep.getVideoUrl();
         Log.d(TAG, "videoUrl = " + currentStepVideoUrl);
+        currentStepImageUrl = currentStep.getThumbnailUrl();
+        //hide image view if no data / else display image
+        if (currentStepImageUrl.isEmpty()) {
+            currentStepImageView.setVisibility(View.GONE);
+        } else {
+            Picasso.with(mContext)
+                    .load(currentStepImageUrl)
+                    .into(currentStepImageView);
+        }
 
         if (savedInstanceState != null) {
             mExoPosition = savedInstanceState.getLong(EXO_POS_KEY);
@@ -170,7 +186,8 @@ public class RecipeStepDetailFragment extends Fragment implements Player.EventLi
             MediaSource mediaSource = new ExtractorMediaSource(videoUrl, new DefaultDataSourceFactory(
                     getContext(), "BakingTime"), new DefaultExtractorsFactory(), null, null);
             mExoPlayer.prepare(mediaSource);
-            mExoPlayer.setPlayWhenReady(true);
+            mExoPlayer.setPlayWhenReady(mExoState);
+            mExoPlayer.seekTo(mExoPosition);
         }
     }
 
@@ -286,6 +303,12 @@ public class RecipeStepDetailFragment extends Fragment implements Player.EventLi
     @Override
     public void onSeekProcessed() {
 
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        initExoPlayer(Uri.parse(currentStepVideoUrl), mPlayerView);
     }
 
 }

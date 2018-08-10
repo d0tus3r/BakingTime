@@ -6,11 +6,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import net.digitalswarm.bakingtime.R;
 import net.digitalswarm.bakingtime.models.Recipe;
 import android.view.View.OnClickListener;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -18,6 +21,7 @@ public class RecipeListRVAdapter extends RecyclerView.Adapter<RecipeListRVAdapte
 
     private ArrayList<Recipe> mRecipeList;
     private final RecipeListRVAdapterClickListener mClickListener;
+    private final Context mContext;
 
     public interface RecipeListRVAdapterClickListener {
         void onClick(int pos);
@@ -25,10 +29,12 @@ public class RecipeListRVAdapter extends RecyclerView.Adapter<RecipeListRVAdapte
 
     public class RecipeListViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
         final TextView recipeTextView;
+        final ImageView recipeImageView;
 
         RecipeListViewHolder(View view) {
             super(view);
             recipeTextView = view.findViewById(R.id.recipe_list_tv); //assign view
+            recipeImageView = view.findViewById(R.id.recipe_list_iv);
             view.setOnClickListener(this);
         }
 
@@ -39,7 +45,7 @@ public class RecipeListRVAdapter extends RecyclerView.Adapter<RecipeListRVAdapte
     }
     //adapter constructor
     public RecipeListRVAdapter(Context context, ArrayList<Recipe> recipeList, RecipeListRVAdapterClickListener clickListener){
-        Context mContext = context;
+        mContext = context;
         this.mRecipeList = recipeList;
         this.mClickListener = clickListener;
     }
@@ -56,6 +62,11 @@ public class RecipeListRVAdapter extends RecyclerView.Adapter<RecipeListRVAdapte
     public void onBindViewHolder(@NonNull final RecipeListViewHolder recipeHolder, int position){
         Recipe currentRecipe = mRecipeList.get(position);
         recipeHolder.recipeTextView.setText(currentRecipe.getName());
+        if (!(currentRecipe.getImageId().isEmpty())) {
+            Picasso.with(mContext)
+                    .load(currentRecipe.getImageId())
+                    .into(recipeHolder.recipeImageView);
+        }
     }
 
     @Override

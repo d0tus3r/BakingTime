@@ -5,4 +5,5 @@
     <string name="previous_step_button">Previous Step</string>
     <string name="next_step_button">Next Step</string>
     <string name="recipe_image">Recipe Image</string>
+    <string name="recipe_step_image">recipe_step_image</string>
 </resources>

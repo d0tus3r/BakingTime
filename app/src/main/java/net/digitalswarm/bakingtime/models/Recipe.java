@@ -98,7 +98,7 @@ public class Recipe implements Parcelable {
         return servings;
     }
 
-    private String getImageId() {
+    public String getImageId() {
         return imageId;
     }
 }
