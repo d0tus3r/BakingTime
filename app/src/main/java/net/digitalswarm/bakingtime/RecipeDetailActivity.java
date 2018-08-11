@@ -47,23 +47,32 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeMas
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 recipeMasterDetailFragment = RecipeMasterDetailFragment.newInstance(currentRecipe.getIngredients(), currentRecipe.getRecipeSteps());
                 stepDetailFragment = RecipeStepDetailFragment.newInstance(currentRecipeStep, Integer.parseInt(currentRecipeStep.getId()));
-                transaction.add(R.id.detail_land_left_frame, recipeMasterDetailFragment);
-                transaction.add(R.id.detail_land_right_frame, stepDetailFragment);
+                transaction.add(R.id.detail_land_left_frame, recipeMasterDetailFragment, "recipeMasterDetailFragment");
+                transaction.add(R.id.detail_land_right_frame, stepDetailFragment, "stepDetailFragment");
+                transaction.commit();
+            } else {
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                recipeMasterDetailFragment = RecipeMasterDetailFragment.newInstance(currentRecipe.getIngredients(), currentRecipe.getRecipeSteps());
+                stepDetailFragment = (RecipeStepDetailFragment) fragmentManager.findFragmentByTag("stepDetailFragment");
+                transaction.add(R.id.detail_land_left_frame, recipeMasterDetailFragment, "recipeMasterDetailFragment");
+                if (stepDetailFragment == null) {
+                    currentRecipeStep = currentRecipeStepsList.get(0);
+                    stepDetailFragment = RecipeStepDetailFragment.newInstance(currentRecipeStep, Integer.parseInt(currentRecipeStep.getId()));
+                }
+                transaction.add(R.id.detail_land_right_frame, stepDetailFragment, "stepDetailFragment");
                 transaction.commit();
             }
 
         } else {
             twoFragments = false;
             setContentView(R.layout.recipe_detail_activity);
-            if (savedInstanceState == null) {
                 //start ingredients and step list fragments
                 //attach within frame layout on detail_frame
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction()
                         .add(R.id.detail_frame, RecipeMasterDetailFragment.newInstance(currentRecipe.getIngredients(), currentRecipe.getRecipeSteps()))
                         .commit();
-            }
-
         }
         //use UP to return to recipe list
         getSupportActionBar().setTitle(currentRecipe.getName());
@@ -77,6 +86,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeMas
         super.onSaveInstanceState(bundle);
         if (stepDetailFragment != null) {
             getSupportFragmentManager().putFragment(bundle, "fragment", stepDetailFragment);
+            bundle.putInt("currentStepId", Integer.parseInt(currentRecipeStep.getId()));
         }
     }
 
@@ -87,7 +97,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeMas
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         if (twoFragments) {
             stepDetailFragment = RecipeStepDetailFragment.newInstance(currentRecipeStep, Integer.parseInt(currentRecipeStep.getId()));
-            transaction.replace(R.id.detail_land_right_frame, stepDetailFragment);
+            transaction.replace(R.id.detail_land_right_frame, stepDetailFragment, "stepDetailFragment");
             transaction.commit();
         } else {
             stepDetailFragment = RecipeStepDetailFragment.newInstance(currentRecipeStep, Integer.parseInt(currentRecipeStep.getId()));
@@ -104,7 +114,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeMas
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             if (twoFragments) {
                 stepDetailFragment = RecipeStepDetailFragment.newInstance(currentRecipeStep, currentRecipeStepId);
-                transaction.replace(R.id.detail_land_right_frame, stepDetailFragment);
+                transaction.replace(R.id.detail_land_right_frame, stepDetailFragment, "stepDetailFragment");
                 transaction.commit();
             } else {
                 stepDetailFragment = RecipeStepDetailFragment.newInstance(currentRecipeStep, currentRecipeStepId);
@@ -122,7 +132,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeMas
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             if (twoFragments) {
                 stepDetailFragment = RecipeStepDetailFragment.newInstance(currentRecipeStep, currentRecipeStepId);
-                transaction.replace(R.id.detail_land_right_frame, stepDetailFragment);
+                transaction.replace(R.id.detail_land_right_frame, stepDetailFragment, "stepDetailFragment");
                 transaction.commit();
             } else {
                 stepDetailFragment = RecipeStepDetailFragment.newInstance(currentRecipeStep, currentRecipeStepId);
