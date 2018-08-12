@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
-public class RecipeSteps implements Parcelable {
+public class RecipeStep implements Parcelable {
     @SerializedName("id")
     private final String id;
     @SerializedName("shortDescription")
@@ -17,8 +17,8 @@ public class RecipeSteps implements Parcelable {
     @SerializedName("thumbnailURL")
     private final String thumbnailUrl;
     //default constructor
-    public RecipeSteps(String id, String shortDescription,
-                       String description, String videoUrl, String thumbnailUrl) {
+    public RecipeStep(String id, String shortDescription,
+                      String description, String videoUrl, String thumbnailUrl) {
         this.id = id;
         this.shortDescription = shortDescription;
         this.description = description;
@@ -27,7 +27,7 @@ public class RecipeSteps implements Parcelable {
     }
 
     //parcel version constructor
-    private RecipeSteps(Parcel parcel){
+    private RecipeStep(Parcel parcel){
         this.id = parcel.readString();
         this.shortDescription = parcel.readString();
         this.description = parcel.readString();
@@ -41,15 +41,15 @@ public class RecipeSteps implements Parcelable {
     }
 
     //recipe steps object creator from parcel
-    public static final Creator<RecipeSteps> CREATOR = new Creator<RecipeSteps>() {
+    public static final Creator<RecipeStep> CREATOR = new Creator<RecipeStep>() {
         @Override
-        public RecipeSteps createFromParcel(Parcel in) {
-            return new RecipeSteps(in);
+        public RecipeStep createFromParcel(Parcel in) {
+            return new RecipeStep(in);
         }
 
         @Override
-        public RecipeSteps[] newArray(int size) {
-            return new RecipeSteps[size];
+        public RecipeStep[] newArray(int size) {
+            return new RecipeStep[size];
         }
     };
 

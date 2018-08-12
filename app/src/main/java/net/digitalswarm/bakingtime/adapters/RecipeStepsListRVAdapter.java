@@ -8,12 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import net.digitalswarm.bakingtime.R;
-import net.digitalswarm.bakingtime.models.RecipeSteps;
+import net.digitalswarm.bakingtime.models.RecipeStep;
 
 import java.util.ArrayList;
 
 public class RecipeStepsListRVAdapter extends RecyclerView.Adapter<RecipeStepsListRVAdapter.RecipeStepsListViewHolder>  {
-    private ArrayList<RecipeSteps> mRecipeStepsList;
+    private ArrayList<RecipeStep> mRecipeStepList;
     private final RecipeStepsListRVAdapterClickListener mClickListener;
 
     public interface RecipeStepsListRVAdapterClickListener {
@@ -38,9 +38,9 @@ public class RecipeStepsListRVAdapter extends RecyclerView.Adapter<RecipeStepsLi
     }
 
     //adapter constructor
-    public RecipeStepsListRVAdapter(Context context, ArrayList<RecipeSteps> recipeStepsList, RecipeStepsListRVAdapterClickListener clickListener){
+    public RecipeStepsListRVAdapter(Context context, ArrayList<RecipeStep> recipeStepList, RecipeStepsListRVAdapterClickListener clickListener){
         Context mContext = context;
-        this.mRecipeStepsList = recipeStepsList;
+        this.mRecipeStepList = recipeStepList;
         this.mClickListener = clickListener;
     }
 
@@ -54,18 +54,18 @@ public class RecipeStepsListRVAdapter extends RecyclerView.Adapter<RecipeStepsLi
 
     @Override
     public void onBindViewHolder(@NonNull final RecipeStepsListViewHolder recipeHolder, int position){
-        RecipeSteps currentRecipeStep = mRecipeStepsList.get(position);
+        RecipeStep currentRecipeStep = mRecipeStepList.get(position);
         recipeHolder.recipeStepsIdTextView.setText(currentRecipeStep.getId());
         recipeHolder.recipeStepsTextView.setText(currentRecipeStep.getShortDescription());
     }
 
     @Override
     public int getItemCount(){
-        return mRecipeStepsList.size();
+        return mRecipeStepList.size();
     }
 
-    public void setmRecipeList(ArrayList<RecipeSteps> recipeStepsList){
-        mRecipeStepsList = recipeStepsList;
+    public void setmRecipeList(ArrayList<RecipeStep> recipeStepList){
+        mRecipeStepList = recipeStepList;
     }
 
 }

@@ -24,6 +24,10 @@
             android:name=".RecipeDetailActivity"
             android:parentActivityName=".RecipeListActivity">
         </activity>
+        <activity
+            android:name=".RecipeStepDetailActivity"
+            android:parentActivityName=".RecipeListActivity">
+        </activity>
 
         <receiver android:name=".widgets.IngredientWidgetProvider" >
             <intent-filter>

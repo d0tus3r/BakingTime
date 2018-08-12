@@ -13,43 +13,32 @@ import net.digitalswarm.bakingtime.R;
 import net.digitalswarm.bakingtime.adapters.IngredientsRVAdapter;
 import net.digitalswarm.bakingtime.adapters.RecipeStepsListRVAdapter;
 import net.digitalswarm.bakingtime.models.Ingredients;
-import net.digitalswarm.bakingtime.models.RecipeSteps;
+import net.digitalswarm.bakingtime.models.Recipe;
+import net.digitalswarm.bakingtime.models.RecipeStep;
 import java.util.ArrayList;
 
-public class RecipeMasterDetailFragment extends Fragment {
+public class RecipeMasterDetailFragment extends Fragment implements RecipeStepsListRVAdapter.RecipeStepsListRVAdapterClickListener {
+    private Recipe mCurrentRecipe;
     private ArrayList<Ingredients> mIngredientsList;
-    private static final String INGREDIENTS_KEY = "INGREDIENTS";
-    private ArrayList<RecipeSteps> mRecipeStepsList;
-    private static final String RECIPE_STEPS_KEY = "RECIPE_STEPS";
-
+    private ArrayList<RecipeStep> mRecipeStepList;
     private LinearLayoutManager ingredientsLayout;
     private LinearLayoutManager recipeStepsLayout;
-    private OnStepsClickListener mCallback;
+    private OnRecipeClickListener mCallback;
 
-    public interface OnStepsClickListener {
-        void onStepSelected(int position);
+    @Override
+    public void onClick(int pos) {
+        mCallback.onStepSelected(pos);
     }
 
+
+    public interface OnRecipeClickListener {
+        // implement on step selected
+        void onStepSelected(int pos);
+        Recipe OnRecipeSelected();
+    }
 
     public RecipeMasterDetailFragment() {
         //empty constructor
-    }
-    //master detail fragment instance
-    public static RecipeMasterDetailFragment newInstance(ArrayList<Ingredients> ingredientsList, ArrayList<RecipeSteps> recipeStepsList) {
-        RecipeMasterDetailFragment recipeMasterDetailFragment = new RecipeMasterDetailFragment();
-        Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList(INGREDIENTS_KEY, ingredientsList);
-        bundle.putParcelableArrayList(RECIPE_STEPS_KEY, recipeStepsList);
-        recipeMasterDetailFragment.setArguments(bundle);
-        return recipeMasterDetailFragment;
-    }
-    //Fragment on create setup
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        //assign recipe data
-        mIngredientsList = getArguments().getParcelableArrayList(INGREDIENTS_KEY);
-        mRecipeStepsList = getArguments().getParcelableArrayList(RECIPE_STEPS_KEY);
     }
 
     @Override
@@ -58,6 +47,9 @@ public class RecipeMasterDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.recipe_master_detail_layout, container, false);
         //assign views
         Context context = getContext();
+        mCurrentRecipe = mCallback.OnRecipeSelected();
+        mIngredientsList = mCurrentRecipe.getIngredients();
+        mRecipeStepList = mCurrentRecipe.getRecipeSteps();
         //ingredients
         RecyclerView ingredientsRV = rootView.findViewById(R.id.ingredients_rv);
         ingredientsLayout = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
@@ -70,12 +62,7 @@ public class RecipeMasterDetailFragment extends Fragment {
         recipeStepsLayout = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recipeStepsRV.setHasFixedSize(true);
         recipeStepsRV.setLayoutManager(recipeStepsLayout);
-        RecipeStepsListRVAdapter recipeStepsRVAdapter = new RecipeStepsListRVAdapter(context, mRecipeStepsList, new RecipeStepsListRVAdapter.RecipeStepsListRVAdapterClickListener() {
-            @Override
-            public void onClick(int pos) {
-                mCallback.onStepSelected(pos);
-            }
-        });
+        RecipeStepsListRVAdapter recipeStepsRVAdapter = new RecipeStepsListRVAdapter(context, mRecipeStepList, this);
         recipeStepsRV.setAdapter(recipeStepsRVAdapter);
 
         return rootView;
@@ -85,7 +72,7 @@ public class RecipeMasterDetailFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            mCallback = (OnStepsClickListener) context;
+            mCallback = (OnRecipeClickListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + " must implement OnStepsClickListener");
         }
